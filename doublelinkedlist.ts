@@ -5,8 +5,8 @@ interface ANode<T> {
 }
 
 class Bst<T> {
-  head?: ANode<T>;
-  tail?: ANode<T>;
+  head?: ANode<T> | undefined;
+  tail?: ANode<T> | undefined;
   length: number;
   constructor() {
     this.length = 0;
@@ -47,11 +47,11 @@ class Bst<T> {
       }
       curr = curr.next;
     }
-    // once we get our to be deleted node
-    this.length--;
     if (!curr) {
       return;
     }
+    // once we get our to be deleted node
+    this.length--;
     if (curr.prev) {
       curr.prev.next = curr.next;
     }

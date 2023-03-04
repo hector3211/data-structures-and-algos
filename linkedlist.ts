@@ -30,25 +30,21 @@ class List<T> {
   }
 
   remove(item: T) {
-    if (this.length === 0) {
+    if (!this.head) {
       return;
     }
-    this.length--;
-    if (this.head?.value === item) {
+    if (this.head.value === item) {
+      this.length--;
       this.head = this.head.next;
       return;
     } else {
       let current = this.head;
       while (current) {
-        if (current.value === item) {
-          break;
+        if (current.next.value === item) {
+          this.length--;
+          current.next = current.next.next;
+          return;
         }
-        current = current.next;
-      }
-      if (!current) {
-        return;
-      }
-      if (current.next) {
         current = current.next;
       }
     }
@@ -65,6 +61,14 @@ class List<T> {
       }
     }
   }
+
+  get_length() {
+    if (this.length === 0) {
+      return;
+    } else {
+      console.log(`The length: ${this.length}`);
+    }
+  }
 }
 
 let lst = new List();
@@ -72,5 +76,11 @@ lst.add(10);
 lst.add(11);
 lst.add(12);
 lst.get_all();
+lst.get_length();
+console.log("Removing!....");
 lst.remove(10);
 lst.get_all();
+console.log("Removing!....");
+lst.remove(11);
+lst.get_all();
+lst.get_length();
