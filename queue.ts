@@ -36,7 +36,7 @@ class Queue<T> {
     return head.value;
   }
 
-  peek() {
+  get_all() {
     if (!this.head) {
       return;
     } else {
@@ -53,4 +53,4 @@ let que = new Queue();
 que.enqueue(10);
 que.enqueue(11);
 que.enqueue(12);
-que.peek();
+que.get_all();
