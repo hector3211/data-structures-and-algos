@@ -1,6 +1,6 @@
 type ANode<T> = {
-  next: ANode<T>;
-  prev: ANode<T>;
+  next: ANode<T> | undefined;
+  prev: ANode<T> | undefined;
   value: T;
 };
 
@@ -56,13 +56,17 @@ class DoubleList<T> {
 
     let current = this.head;
     for (let i = 0; current && i < idx; i++) {
-      current = current.next;
+      if (current.next) {
+        current = current.next;
+      }
     }
     console.log(`Adding -- ${item}`);
     new_node.next = current.next;
     new_node.prev = current;
     current.next = new_node;
-    current.prev.next = current;
+    if (current.prev) {
+      current.prev.next = current;
+    }
   }
 
   remove(item: T) {
@@ -70,7 +74,12 @@ class DoubleList<T> {
       return;
     }
 
-    let current = this.head;
+    if (this.head.value === item) {
+      this.head = this.head.next;
+      return;
+    }
+
+    let current = this.head?.next;
     while (current) {
       if (current.value === item) {
         break;
@@ -92,11 +101,6 @@ class DoubleList<T> {
     if (current.next) {
       current.next.prev = current.prev;
     }
-
-    if (current === this.head) {
-      this.head = current.next;
-    }
-
     if (current === this.tail) {
       this.tail = current.prev;
     }
@@ -109,6 +113,10 @@ class DoubleList<T> {
     console.log("Getting nodes...");
     let current = this.head;
     while (current) {
+      if (!current.next) {
+        console.log(`value -- ${current.value}`);
+        break;
+      }
       console.log(`value -- ${current.value}`);
       current = current.next;
     }
@@ -121,7 +129,6 @@ dlist.append(11);
 dlist.append(12);
 dlist.append(13);
 dlist.append(14);
-dlist.insert_at(2, 15);
 dlist.get_all();
-dlist.remove(13);
+dlist.insert_at(2, 15);
 dlist.get_all();
