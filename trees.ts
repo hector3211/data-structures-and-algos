@@ -64,8 +64,33 @@ function in_order<T>(node: TNode<T>): void {
   }
 }
 
+function pre_order<T>(node: TNode<T>): void {
+  if (!node) {
+    return;
+  } else {
+    console.log(node.value);
+    pre_order(node.left);
+    pre_order(node.right);
+  }
+}
+
+function post_order<T>(node: TNode<T>): void {
+  if (!node) {
+    return;
+  } else {
+    post_order(node.right);
+    console.log(node.value);
+    post_order(node.left);
+  }
+}
+
 let tree = new Tree();
 tree.append(10);
 tree.append(5);
 tree.append(12);
-console.log(in_order(tree.root as TNode<number>));
+console.log("In order...");
+in_order(tree.root as TNode<number>);
+console.log("Pre order...");
+pre_order(tree.root as TNode<number>);
+console.log("Post order...");
+post_order(tree.root as TNode<number>);
