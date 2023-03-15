@@ -5,8 +5,7 @@ type TNode<T> = {
 };
 
 interface TreeActions<T> {
-    append(item: T): void;
-    search(item: T): boolean;
+    insert(item: T): void;
 }
 
 class Tree<T> implements TreeActions<T> {
@@ -16,7 +15,7 @@ class Tree<T> implements TreeActions<T> {
         this.root = undefined;
     }
 
-    append(item: T) {
+    insert(item: T) {
         const new_node = { value: item } as TNode<T>;
         if (!this.root) {
             this.root = new_node;
@@ -42,21 +41,80 @@ class Tree<T> implements TreeActions<T> {
             }
         }
     }
+}
 
-    search(item: T): boolean {
-        let current = this.root;
+function deletion(node: TNode<number> | undefined, item: number): void {
+    node = deleteNode(node, item);
+}
+
+function deleteNode(node: TNode<number> | undefined, item: number): TNode<number> | undefined {
+    if (!node) {
+        return;
+    }
+
+    // once we find the node that has our value
+    if (node.value === item) {
+        // if no children we return, this means we cant delete!
+        if (!node.left && !node.right) {
+            return;
+        }
+        // if nothing on the left we return right
+        if (!node.left) {
+            return node.right;
+        }
+        // if nothing on the right we return left
+        if (!node.right) {
+            return node.left;
+        }
+
+        // find smallest node in right subtree
+        const smallestNodeValue = findSmallestNode(node.right);
+        // replace current nodes value with the smallest
+        node.value = smallestNodeValue;
+        // we keep going right to find the biggest but smalled value on the right subtrees
+        node.right = deleteNode(node.right, smallestNodeValue);
+        return node;
+    } else if (item > node.value) {
+        // recursion
+        node.right = deleteNode(node.right, item);
+        return node;
+    } else {
+        // recursion
+        node.left = deleteNode(node.left, item);
+        return node;
+    }
+
+}
+
+function findSmallestNode(node: TNode<number>): number {
+    while (node.left) {
+        node = node.left;
+    }
+
+    return node.value;
+}
+
+function search(node: TNode<number> | undefined, item: number): boolean {
+    if (!node) {
+        return false;
+    } else {
+        let current = node;
         while (current) {
+            console.log(`current valur: - ${current.value}`);
             if (current.value === item) {
                 return true;
             } else if (current.value > item) {
-                current = current.right;
+                current = current.left as TNode<number>;
             } else {
-                current = current.left;
+                current = current.right as TNode<number>;
             }
+
         }
-        return false;
     }
+    return false;
 }
+
+
 
 function in_order(node: TNode<number> | undefined): void {
     if (!node) {
@@ -68,6 +126,7 @@ function in_order(node: TNode<number> | undefined): void {
         in_order(current.right);
     }
 }
+
 
 function pre_order(node: TNode<number> | undefined): void {
     if (!node) {
@@ -142,24 +201,35 @@ function compareTrees(
 }
 
 let tree = new Tree();
-tree.append(10);
-tree.append(5);
-tree.append(12);
-
-let treeTwo = new Tree();
-treeTwo.append(10);
-treeTwo.append(5);
-treeTwo.append(12);
-treeTwo.append(2);
-
-console.log("Pre order...");
-pre_order(tree.root as TNode<number>);
+tree.insert(17);
+tree.insert(15);
+tree.insert(4);
+tree.insert(16);
+tree.insert(50);
+tree.insert(25);
+tree.insert(60);
+tree.insert(45);
+tree.insert(35);
+tree.insert(58);
 console.log("In order...");
 in_order(tree.root as TNode<number>);
-console.log("Post order...");
-post_order(tree.root as TNode<number>);
+// console.log(`search:- ${search(tree.root as TNode<number>, 12)}`);
+console.log(`Deletion of NODE-- ${deletion(tree.root as TNode<number>, 45)}`)
 
-console.log("Breadth First Search...");
-console.log(breadthFirstSearch(tree.root as TNode<number>, 15));
-// Compare two trees!
-console.log(compareTrees(tree.root as TNode<number>, treeTwo.root as TNode<number>));
+let treeTwo = new Tree();
+treeTwo.insert(10);
+treeTwo.insert(5);
+treeTwo.insert(12);
+treeTwo.insert(2);
+
+// console.log("Pre order...");
+// pre_order(tree.root as TNode<number>);
+console.log("In order...");
+in_order(tree.root as TNode<number>);
+// console.log("Post order...");
+// post_order(tree.root as TNode<number>);
+
+// console.log("Breadth First Search...");
+// console.log(breadthFirstSearch(tree.root as TNode<number>, 15));
+// // Compare two trees!
+// console.log(compareTrees(tree.root as TNode<number>, treeTwo.root as TNode<number>));

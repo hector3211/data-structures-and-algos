@@ -2,7 +2,9 @@ const list = [0, 1, 2, 3, 4, 5, 6, 7];
 const target = 6;
 // Binary Search
 function binary_search(ar: number[], value: number): number {
+    // inclusive
     let low = 0;
+    // exclusive
     let hi = ar.length;
     for (let i = low; i < hi; i++) {
         const mid = Math.floor(low + (hi - low) / 2);
